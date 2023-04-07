@@ -86,7 +86,6 @@ export default function Home() {
     };
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -103,8 +102,8 @@ export default function Home() {
       messages: [{ "role": "system", "content": "Act as JSON invoice generator, don't answer questions other than related to invoice. Ask user about: Date, Invoice No, Invoiced To, Pay To, Service, Description, Rate, QTY, Amount, Sub Total, Tax, Total. You have to ask user if any of these detail are missing. When the user says no, then you just have to return data as JSON and a button to generate pdf." }].concat(context),
       temperature: 0.1,
       max_tokens: 200
-    }
-    // Send chat history to API
+    };
+
     const response = await fetch("https://api.openai.com/v1/chat/completions",
       {
         method: "POST",
@@ -118,21 +117,16 @@ export default function Home() {
     if (!response.ok) {
       handleError();
       return;
-    }
-    // Reset user input
+    };
+
     setUserInput("");
     const data = await response.json();
-    const jsonRegex = /^\s*(\{|\[)[\s\S]*([\}|\]])\s*$/;
-    if (jsonRegex.test(data.choices[0].message.content)) {
-      setPdfData(true);
-    }
+
     setPdfData(data.choices[0].message.content)
     setMessages((prevMessages) => [...prevMessages, { role: "assistant", content: data.choices[0].message.content }]);
     setLoading(false);
-
   };
 
-  // Prevent blank submissions and allow for multiline input
   const handleEnter = (e) => {
     if (e.key === "Enter" && userInput) {
       if (!e.shiftKey && userInput) {
@@ -195,7 +189,6 @@ export default function Home() {
                 className={styles.generatebutton}
               >
                 {loading ? <div className={styles.loadingwheel}><CircularProgress color="inherit" size={20} /> </div> :
-                  // Send icon SVG in input field
                   <svg viewBox='0 0 20 20' className={styles.svgicon} xmlns='http://www.w3.org/2000/svg'>
                     <path d='M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z'></path>
                   </svg>}
