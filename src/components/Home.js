@@ -27,18 +27,15 @@ export default function Home() {
     setRecognition(newRecognition);
   }, []);
 
-  // Auto scroll chat to bottom
   useEffect(() => {
     const messageList = messageListRef.current;
     messageList.scrollTop = messageList.scrollHeight;
   }, [messages]);
 
-  // Focus on text field on load
   useEffect(() => {
     textAreaRef.current.focus();
   }, []);
 
-  // Handle errors
   const handleError = () => {
     setMessages((prevMessages) => [...prevMessages, { role: "assistant", content: "To get started, make sure internet connectivity." }]);
     setLoading(false);
