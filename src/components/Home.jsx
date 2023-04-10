@@ -95,7 +95,7 @@ export default function Home(props) {
     setMessages(context);
     const apiRequestBody = {
       "model": "gpt-3.5-turbo",
-      messages: [{ "role": "system", "content": "Act as JSON invoice generator, don't answer questions other than related to invoice. Ask user about: Customer Name, Item Description, Item Amount, Total. You have to ask user if any of detail is missing. When the user says no, and return user data in only JSON." }].concat(context),
+      messages: [{ "role": "system", "content": "Act as JSON invoice generator, only answer invoice related things. Ask user about: Customer Name, Item Description, Item Amount, Total. You have to ask user if any of detail is missing. When the user says no, and return user data in only JSON." }].concat(context),
       temperature: 0.1,
       max_tokens: 200
     };
