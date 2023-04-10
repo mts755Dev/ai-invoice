@@ -58,7 +58,7 @@
   resize: none;
   font-size: 1.1rem;
   padding: 1rem 2rem 1rem 2rem;
-  width: 75vw;
+  width: 70vw;
   border-radius: 0.5rem;
   border: 1px solid #30373d;
   background: #0e1524;
@@ -230,7 +230,7 @@
 }
 
 .cloud {
-  width: 75vw;
+  width: 70vw;
   height: 65vh;
   background: #0e1524;
   border-radius: 0.5rem;
@@ -239,6 +239,17 @@
   justify-content: center;
   align-items: center;
   margin-bottom: 2rem;
+}
+.cloudright {
+  width: 25vw;
+  height: 65vh;
+  background: #0e1524;
+  border-radius: 0.5rem;
+  border: 1px solid #30373d;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  margin-right: 6rem;
 }
 
 .pointsnormal {

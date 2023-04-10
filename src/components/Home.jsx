@@ -1,20 +1,16 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from '../styles/home.module.css';
 import ReactMarkdown from 'react-markdown';
 import user from '../assets/user.png';
 import gptIcon from '../assets/chatgpt-icon.png';
-import { Button } from '@mui/material';
 import CircularProgress from '@mui/material/CircularProgress';
-import pdfMake from "pdfmake";
-import PdfDocument from './PdfDocument';
 
 window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
 
-export default function Home() {
+export default function Home(props) {
 
-  const variables = {};
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
-  const [pdfData, setPdfData] = useState(false);
+  const [variables, setVariables] = useState({});
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [recognition, setRecognition] = useState(null);
@@ -22,7 +18,6 @@ export default function Home() {
   const [messages, setMessages] = useState([
     { role: "assistant", content: "Hi, I'm here to generate you an invoice. Share the details..." }
   ]);
-
   const messageListRef = useRef(null);
   const textAreaRef = useRef(null);
 
@@ -100,7 +95,7 @@ export default function Home() {
     setMessages(context);
     const apiRequestBody = {
       "model": "gpt-3.5-turbo",
-      messages: [{ "role": "system", "content": "Act as JSON invoice generator, don't answer questions other than related to invoice. Ask user about: Description, Amount, Total. You have to ask user if any of these detail are missing. When the user says no, then only return user data in JSON." }].concat(context),
+      messages: [{ "role": "system", "content": "Act as JSON invoice generator, don't answer questions other than related to invoice. Ask user about: Name, Description, Amount, Total. You have to ask user if any of detail is missing. When the user says no, and return user data in JSON." }].concat(context),
       temperature: 0.1,
       max_tokens: 200
     };
@@ -115,26 +110,28 @@ export default function Home() {
         body: JSON.stringify(apiRequestBody)
       });
 
-    if (!response.ok) {
-      handleError();
-      return;
-    };
-
-    setUserInput("");
-    const data = await response.json();
-    const jsonString = data.choices[0].message.content.match(/^{[\s\S]*}$/m);
-    if (jsonString) {
-      const jsonObject = JSON.parse(jsonString);
-      const keys = Object.keys(jsonObject);
-      keys.forEach(key => {
-        variables[key] = jsonObject[key];
-      });
-      if (variables.hasOwnProperty("Description".toLowerCase()) || variables.hasOwnProperty("Total".toLowerCase()) || variables.hasOwnProperty("Amount".toLowerCase())) {
-        setPdfData(true);
+      if (!response.ok) {
+        handleError();
+        return;
       };
-    };
-    setMessages((prevMessages) => [...prevMessages, { role: "assistant", content: data.choices[0].message.content }]);
-    setLoading(false);
+
+      setUserInput("");
+      const data = await response.json();
+      const jsonString = data.choices[0].message.content.match(/^{[\s\S]*}$/m);
+      if (jsonString) {
+        const jsonObject = JSON.parse(jsonString);
+        const keys = Object.keys(jsonObject);
+        const variables = {};
+        keys.forEach(key => {
+          variables[key] = jsonObject[key];
+        });
+        if (variables.hasOwnProperty("Description".toLowerCase()) || variables.hasOwnProperty("Total".toLowerCase()) || variables.hasOwnProperty("Amount".toLowerCase())) {
+          setVariables(variables);
+          props.callback(variables);
+        };
+      };
+      setMessages((prevMessages) => [...prevMessages, { role: "assistant", content: data.choices[0].message.content }]);
+      setLoading(false);
   };
 
   const handleEnter = (e) => {
@@ -149,19 +146,8 @@ export default function Home() {
     }
   };
 
-  const generatePdf = () => {
-    const pdfDocGenerator = pdfMake.createPdf(<PdfDocument variables={variables}/>);
-    pdfDocGenerator.open();
-  };
-
-
   return (
     <>
-      <div className={styles.topnav}>
-        <div className={styles.navlogo}>
-          <a href="/">Invoice Bot</a>
-        </div>
-      </div>
       <main className={styles.main}>
         <div className={styles.cloud}>
           <div ref={messageListRef} className={styles.messagelist}>
@@ -180,7 +166,6 @@ export default function Home() {
             })}
           </div>
         </div>
-        {pdfData && <Button onClick={generatePdf} className={styles.generatepdfbutton} variant="contained">Generate PDF</Button>}
         <div className={styles.center}>
           <div className={styles.cloudform}>
             <form onSubmit={handleSubmit}>
