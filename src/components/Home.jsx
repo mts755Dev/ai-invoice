@@ -95,7 +95,7 @@ export default function Home(props) {
     setMessages(context);
     const apiRequestBody = {
       "model": "gpt-3.5-turbo",
-      messages: [{ "role": "system", "content": "Act as JSON invoice generator, don't answer questions other than related to invoice. Ask user about: Name, Description, Amount, Total. You have to ask user if any of detail is missing. When the user says no, and return user data in JSON." }].concat(context),
+      messages: [{ "role": "system", "content": "Act as JSON invoice generator, don't answer questions other than related to invoice. Ask user about: Customer Name, Item Description, Item Amount, Total. You have to ask user if any of detail is missing. When the user says no, and return user data in only JSON." }].concat(context),
       temperature: 0.1,
       max_tokens: 200
     };
@@ -119,16 +119,16 @@ export default function Home(props) {
       const data = await response.json();
       const jsonString = data.choices[0].message.content.match(/^{[\s\S]*}$/m);
       if (jsonString) {
-        const jsonObject = JSON.parse(jsonString);
+        const jsonObject = JSON.parse(jsonString[0]);
         const keys = Object.keys(jsonObject);
         const variables = {};
         keys.forEach(key => {
           variables[key] = jsonObject[key];
         });
-        if (variables.hasOwnProperty("Description".toLowerCase()) || variables.hasOwnProperty("Total".toLowerCase()) || variables.hasOwnProperty("Amount".toLowerCase())) {
+        // if (variables.hasOwnProperty("Item Description".toLowerCase()) || variables.hasOwnProperty("Total".toLowerCase()) || variables.hasOwnProperty("Customer Name".toLowerCase()) || variables.hasOwnProperty("Item Amount".toLowerCase())) {
           setVariables(variables);
           props.callback(variables);
-        };
+        // };
       };
       setMessages((prevMessages) => [...prevMessages, { role: "assistant", content: data.choices[0].message.content }]);
       setLoading(false);
