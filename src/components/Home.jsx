@@ -10,6 +10,7 @@ window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecogn
 export default function Home(props) {
 
   const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+  // eslint-disable-next-line no-unused-vars
   const [variables, setVariables] = useState({});
   const [userInput, setUserInput] = useState("");
   const [loading, setLoading] = useState(false);
