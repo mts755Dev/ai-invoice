@@ -58,7 +58,7 @@
   resize: none;
   font-size: 1.1rem;
   padding: 1rem 2rem 1rem 2rem;
-  width: 70vw;
+  width: 67.5vw;
   border-radius: 0.5rem;
   border: 1px solid #30373d;
   background: #0e1524;
@@ -225,12 +225,11 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  padding: 2rem 0;
   flex-direction: column;
 }
 
 .cloud {
-  width: 70vw;
+  width: 67.5vw;
   height: 65vh;
   background: #0e1524;
   border-radius: 0.5rem;
@@ -241,7 +240,7 @@
   margin-bottom: 2rem;
 }
 .cloudright {
-  width: 25vw;
+  width: 27.5vw;
   height: 65vh;
   background: #0e1524;
   border-radius: 0.5rem;
@@ -249,7 +248,6 @@
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
-  margin-right: 6rem;
 }
 
 .pointsnormal {
@@ -290,6 +288,11 @@
     width: 22rem;
     height: 28rem;
   }
+  .cloudright {
+    width: 22rem;
+    height: 28rem;
+  }
+
   .textarea {
     width: 22rem;
   }

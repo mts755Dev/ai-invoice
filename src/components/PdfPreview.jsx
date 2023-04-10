@@ -3,6 +3,7 @@ import { Document, Page, Text, View, pdf } from '@react-pdf/renderer';
 import { Button } from '@mui/material';
 
 function PdfPreview({ data }) {
+
   function formatFieldName(fieldName) {
     return fieldName
       .split("_")
@@ -51,27 +52,35 @@ function PdfPreview({ data }) {
   return (
     <main className={styles.main}>
       <div className={styles.cloudright}>
-        <Document>
-          <Page size="A4">
-            <View style={{ padding: '20px' }}>
-              <Text style={{ fontSize: '24pt', margin: '20pt 0' }}>Invoice</Text><br /><br />
-              <Text style={{ fontSize: '16pt' }}>Date: {new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</Text>
-              {data &&
-                Object.entries(data).map(([key, value]) => (
-                  <div key={key}>
-                    <Text style={{ fontSize: '16pt' }}>
-                      {formatFieldName(key)}: {value}
-                    </Text>
-                  </div>
-                ))}
-            </View>
-          </Page>
-        </Document>
+      <Document>
+  <Page size="A4" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '20px' }}>
+    <Text style={{ fontSize: '24pt' }}>Invoice</Text><br />
+    <Text style={{ fontSize: '16pt' }}>Date: {new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</Text>
+    {data &&
+      Object.entries(data).map(([key, value]) => (
+        <div key={key} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Text style={{ fontSize: '16pt', textAlign: 'center' }}>
+            {formatFieldName(key)}: {value}
+          </Text>
+        </div>
+      ))}
+  </Page>
+</Document>
+
       </div>
       {Object.keys(data).length > 0 ? (
-        <Button onClick={downloadPdf} variant="contained">
-          Download PDF
-        </Button>
+         <Button
+         onClick={downloadPdf}
+         variant="contained"
+         style={{
+           fontSize: '1.2rem',
+           padding: '0.6rem 1rem',
+           border: '1px solid #30373d',
+           background: '#0e1524',
+         }}
+       >
+         Download Invoice
+       </Button>
       ) : null}
     </main>
   );
