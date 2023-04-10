@@ -15,28 +15,26 @@ function PdfPreview({ data }) {
       <Document>
         <Page size="A4">
           <View style={{ padding: '20px' }}>
-            <Text style={{ fontSize: '24pt', margin: '20pt 0' }}>Invoice</Text>
-            <br />
-            <br />
-            <Text style={{ fontSize: '16pt' }}>
-              Date:{' '}
-              {new Date().toLocaleDateString(undefined, {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              })}
+            <Text style={{ fontSize: '24pt', fontWeight: 'bold', textAlign: 'center' }}>Invoice</Text>
+            <Text style={{ fontSize: '16pt', textAlign: 'right', marginTop: '40pt' }}>
+              Date: {new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
             </Text>
-            {data &&
-              Object.entries(data).map(([key, value]) => (
-                <div key={key}>
-                  <Text style={{ fontSize: '16pt' }}>
-                    {formatFieldName(key)}: {value}
+            <View style={{ marginTop: '40pt' }}>
+              {data && Object.entries(data).map(([key, value]) => (
+                <View key={key} style={{ marginBottom: '16pt' }}>
+                  <Text style={{ fontSize: '14pt', fontWeight: 'bold' }}>
+                    {formatFieldName(key)}:
                   </Text>
-                </div>
+                  <Text style={{ fontSize: '14pt' }}>
+                    {value}
+                  </Text>
+                </View>
               ))}
+            </View>
           </View>
         </Page>
       </Document>
+
     );
 
     const blobStream = await pdf(pdfContent).toBlob();
